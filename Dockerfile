@@ -1,2 +1,2 @@
 FROM openresty/openresty:trusty
-COPY lua/hellolua.lua /usr/local/openresty/nginx
+COPY lua/*.lua /usr/local/openresty/nginx/
