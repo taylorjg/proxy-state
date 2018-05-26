@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+  <h1>Stats</h1>
+  <table>
+    <thead>
+      <th>Target</th>
+      <th>Count</th>
+    </thead>
+    <tbody>
+      {% for target, targetStats in pairs(stats) do %}
+      <tr>
+        <td>{*target*}</td>
+        <td>{{targetStats.count}}</td>
+      </tr>
+      {% end %}
+    </tbody>
+  </table>
+</body>
+
+</html>

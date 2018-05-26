@@ -1,2 +1,2 @@
 proxy = require "Proxy"
-proxy.addRequestStats()
+proxy.addTargetStats()
