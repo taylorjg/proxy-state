@@ -1,3 +1,5 @@
+local template = require "resty.template"
+
 local Proxy = {}
 
 local stats = {}
@@ -22,11 +24,13 @@ function Proxy.addRequestStats()
 end
 
 function Proxy.getAllStats()
+    
     ngx.log(ngx.INFO, "[Proxy] inside Proxy.getAllStats()")
     for target, targetStats in pairs(stats) do
         ngx.log(ngx.INFO, string.format("[Proxy] target: %s; count: %s", target, targetStats.count))
     end
-    return stats
+
+    template.render("proxystats.html", { message = "Hello, World!" })
 end
 
 return Proxy
