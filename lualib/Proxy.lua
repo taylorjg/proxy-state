@@ -4,9 +4,11 @@ local cjson = require "cjson"
 local M = {}
 
 local stats = {}
+local nextIndex = 1
 
-function createTargetStats(latency, status)
+function createTargetStats(target, latency, status)
     local targetStats = {}
+    targetStats.target = target
     targetStats.count = 1
     targetStats.avg_latency_ms = latency
     targetStats.http_status = {};
@@ -30,12 +32,23 @@ function incrementHttpStatusCount(http_status, status)
     end
 end
 
+function findTargetStats(target)
+    for k, v in pairs(stats) do
+        ngx.log(ngx.INFO, string.format("v.target: %s; target: %s", v.target, target))
+        if v.target == target then
+            return v
+        end
+    end
+    return nil
+end
+
 function M.addTargetStats()
     local target = ngx.var.arg_target
     if target then
         local status = ngx.status
         local latency = 1000 * (tonumber(ngx.var.upstream_response_time) or 0)
-        local targetStats = stats[target]
+        -- local targetStats = stats[target]
+        local targetStats = findTargetStats(target)
         if targetStats then
             local oldCount = targetStats.count
             local newCount = oldCount + 1
@@ -45,7 +58,9 @@ function M.addTargetStats()
             targetStats.avg_latency_ms = avgToTwoDecimalPlaces
             incrementHttpStatusCount(targetStats.http_status, status)
         else
-            stats[target] = createTargetStats(latency, status)
+            -- stats[target] = createTargetStats(target, latency, status)
+            stats[nextIndex] = createTargetStats(target, latency, status)
+            nextIndex = nextIndex + 1
         end
     end
 end
