@@ -4,14 +4,21 @@ local M = {}
 
 local stats = {}
 
+-- TODO: order HTTP status ranges
+-- TODO: limit avg_latency_ms to 2 decimal places
+-- TODO: refactor to remove duplication
+-- TODO: make stats available in JSON format (/proxy/stats?format=json)
+
 function M.addTargetStats()
     local target = ngx.var.arg_target
     if target then
         local status = ngx.status
+        local latency = 1000 * (tonumber(ngx.var.upstream_response_time) or 0)
         local targetStats = stats[target]
         if targetStats then
             targetStats.count = targetStats.count + 1
-            -- targetStats.avg_latency_ms
+            targetStats.total_latency_ms = targetStats.total_latency_ms + latency
+            targetStats.avg_latency_ms = targetStats.total_latency_ms / targetStats.count
             local http_status = targetStats.http_status
             if status >= 200 and status < 300 then
                 http_status["2XX"] = http_status["2XX"] + 1
@@ -26,7 +33,8 @@ function M.addTargetStats()
             stats[target] = {}
             local targetStats = stats[target]
             targetStats.count = 1
-            targetStats.avg_latency_ms = 0
+            targetStats.total_latency_ms = latency
+            targetStats.avg_latency_ms = latency
             targetStats.http_status = {};
             local http_status = targetStats.http_status
             http_status["2XX"] = 0
