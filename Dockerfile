@@ -1,5 +1,4 @@
 FROM openresty/openresty:trusty
-COPY conf/nginx.conf /usr/local/openresty/nginx/conf
 COPY conf.d/default.conf /etc/nginx/conf.d
 COPY lualib/*.lua /usr/local/openresty/lualib/
 COPY html/*.html /usr/local/openresty/nginx/html/
