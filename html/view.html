@@ -40,12 +40,28 @@
             <th>Count</th>
           </thead>
           <tbody>
-            {% for range, count in pairs(targetStats.http_status) do %}
+            <!-- {% for range, count in pairs(targetStats.http_status) do %}
             <tr>
               <td>{{range}}</td>
               <td>{{count}}</td>
             </tr>
-            {% end %}
+            {% end %} -->
+            <tr>
+              <td>2XX</td>
+              <td>{{targetStats.http_status["2XX"]}}</td>
+            </tr>
+            <tr>
+              <td>3XX</td>
+              <td>{{targetStats.http_status["3XX"]}}</td>
+            </tr>
+            <tr>
+              <td>4XX</td>
+              <td>{{targetStats.http_status["4XX"]}}</td>
+            </tr>
+            <tr>
+              <td>5XX</td>
+              <td>{{targetStats.http_status["5XX"]}}</td>
+            </tr>
           </tbody>
         </table>
 
